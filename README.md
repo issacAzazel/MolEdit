@@ -8,7 +8,9 @@ MolEdit is a multimodal, group-optimized, physics-informed and controllable gene
 We propose the multimodal likelihood decomposition to tackle the problem of "discreteness-continuity duality" in molecules. This approach allows us to robustly generate multiple modalities of molecules, including constituents, graphs, and structures.
 ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/generation_example.png)
 
-## 
+## Diverse Generation in Chemical and Conformational Space 
+MolEdit exhibits diversity in both chemical space (i.e., generating multiple isomers) and conformational space (i.e., sampling multiple conformations). It is worth mentioning that, we trained MolEdit on a dataset which only contains one conformation for each molecule. In other words, the capability of multi-conformational sampling results from a "zero-shot" generalization.
+![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/diversity.png)
 
 ## Learning Symmetry-preserving distributions
 We develop group-optimized score matching (GOSM) which mathematically includes group actions in diffusion models. GOSM has the capability to learn a distribution which preserves the symmetry under any groups, including SE(3) and permutation groups that are commonly appear in molecular systems.
@@ -24,7 +26,7 @@ As a compelling feature, MolEdit can operate following various prompts that spec
 
 ## Demo
 
-Get started with [moledit.ipynb](./moledit.ipynb) notebook, where we implemented a demo of multimodal generaion of molecules, with MolEdit trained on [QM9 dataset](www.nature.com/articles/sdata201422).
+Get started with [moledit.ipynb](./moledit.ipynb) notebook, where we implemented a demo of multimodal generaion of molecules, with MolEdit trained on [QM9 dataset](https://www.nature.com/articles/sdata201422).
 
 Running this demo requires: 
 * jax==0.4.20, jaxlib==0.4.20
