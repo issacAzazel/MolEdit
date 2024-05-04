@@ -6,9 +6,7 @@ MolEdit is a multimodal, group-optimized, physics-informed and controllable gene
 
 ## Multimodal Generation of Molecules 
 We propose the multimodal likelihood decomposition 
-$$
-    \log P(\mathrm{mol})\approx \log P_S(\mathbf{s}_{\mathrm{mol}}) + \log p_{X|S}(\mathbf{x}_{\mathrm{mol}} | \mathbf{s}_{\mathrm{mol}})
-$$
+$$\log P(\mathrm{mol})\approx \log P_S(\mathbf{s}_{\mathrm{mol}}) + \log p_{X|S}(\mathbf{x}_{\mathrm{mol}} | \mathbf{s}_{\mathrm{mol}})$$
 
 ## Group-optimized Score Matching 
 
