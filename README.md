@@ -5,12 +5,14 @@ This is the github repo for the paper ["Versatile Molecular Editing via Multimod
 MolEdit is a multimodal, group-optimized, physics-informed and controllable generative method for molecular systems, developed by Gao Group, Peking University. With MolEdit, we aim to solve the challenge of molecular editing, a central concept in functional molecule design, which encompasses the generation, modification and evolution of molecules towards desired properties with specified structural features.
 
 ## Multimodal Generation of Molecules 
-We propose the multimodal likelihood decomposition 
-$$\log P(\mathrm{mol})\approx \log P_S(\mathbf{s}_{\mathrm{mol}}) + \log p_{X|S}(\mathbf{x}_{\mathrm{mol}} | \mathbf{s}_{\mathrm{mol}})$$
+We propose the multimodal likelihood decomposition to tackle the problem of "discreteness-continuity duality" in molecules. This approach allows us to robustly generate multiple modalities of molecules, including constituents, graphs, and structures.
 
-## Group-optimized Score Matching 
+## Diversity in 
 
-## Physics-informed Learning 
+## Learning Symmetry-preserving distributions
+We develop group-optimized score matching (GOSM) which mathematically includes group actions in diffusion models. GOSM has the capability to learn a distribution which preserves the symmetry under any groups, including SE(3) and permutation groups that are commonly appear in molecular systems.
+
+## Physics-informed Diffusion Models 
 
 ## Controllable Editing of Generated Molecules
 
