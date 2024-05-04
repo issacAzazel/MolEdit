@@ -11,6 +11,7 @@ We propose the multimodal likelihood decomposition to tackle the problem of "dis
 
 ## Learning Symmetry-preserving distributions
 We develop group-optimized score matching (GOSM) which mathematically includes group actions in diffusion models. GOSM has the capability to learn a distribution which preserves the symmetry under any groups, including SE(3) and permutation groups that are commonly appear in molecular systems.
+![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/GOSM.png)
 
 ## Physics-informed Diffusion Models 
 
