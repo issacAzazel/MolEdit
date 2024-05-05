@@ -35,6 +35,10 @@ Running this demo requires:
 * Xponge==1.5.0a6, installed via `pip install git+https://gitee.com/gao_hyp_xyj_admin/xponge.git`
 * nglview==3.1.2 (for visualization in notebooks)
 
+## Data Availability
+
+The dataset used in the development of MolEdit can be found in [here](https://zenodo.org/records/11115372).
+
 ## Citation
 ```python
 @article{lin2023versatile,
