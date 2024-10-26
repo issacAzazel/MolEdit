@@ -28,7 +28,7 @@ Before running notebooks, download and unzip pre-trained MolEdit checkpoints fro
 
 Explore MolEdit's capabilities with:
 * [moledit_qm9.ipynb](./moledit_qm9.ipynb) notebook, which contains demos of generation and editing of molecules (less than 9 non-hydrogen atoms), and physics-alignment via MolEdit trained on [QM9 dataset](https://www.nature.com/articles/sdata201422).
-* [moledit.ipynb](./moledit.ipynb) notebook, which contains demos of de-novo design of drug-like molecules, and following applications:
+* [moledit.ipynb](./moledit.ipynb) notebook, which contains demos of de-novo design of drug-like molecules, and following applications via MolEdit trained on [ZINC dataset](https://zinc15.docking.org/).
     * High quality structure rendering and diverse conformational sampling for complex molecules
 ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_rendering.png)  
     * Structure editing and inpainting
@@ -44,8 +44,6 @@ Explore MolEdit's capabilities with:
     * Lead-imprinted binder design for protein pockets
 ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/lead_imprinting.png) 
     * ...
-
-via MolEdit trained on [ZINC dataset](https://zinc15.docking.org/).
 
 Running these notebooks requires: 
 * python==3.10
