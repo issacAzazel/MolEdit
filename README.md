@@ -10,7 +10,9 @@ We propose an asynchronous multimodal diffusion schedule for molecular DDPMs. Th
 
 ## Imbue Diffusion Models with Symmetry-Awareness via Group-Optimized Labeling
 We develop Group-Optimized Denoising Diffusion (GODD), that explicitly integrates group actions into DDPMs. GODD functions through group-optimized labeling, which serves as a plug-and-play and non-invasive modification to DDPM training objectives. GODD enhances the model's awareness of the diverse molecular symmetries embedded in various molecular point groups.
-![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/symmetry.png)
+<p align="center">
+  <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/symmetry.png" width="70%">
+</p> 
 <p align="center">
   <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/GOSM.png" width="70%">
 </p> 
@@ -34,7 +36,9 @@ Explore MolEdit's capabilities with:
     * High quality structure rendering and diverse conformational sampling for complex molecules
 ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_rendering.png)  
     * Structure editing and inpainting
-![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_editing.png) 
+<p align="center">
+  <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_editing.png" width="50%">
+</p> 
     * Re-design of aromatic systems 
 <p align="center">
   <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/aromatic_system.png" width="50%">
