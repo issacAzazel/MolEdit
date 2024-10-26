@@ -33,37 +33,13 @@ Before running notebooks, download and unzip pre-trained MolEdit checkpoints fro
 Explore MolEdit's capabilities with:
 * [moledit_qm9.ipynb](./moledit_qm9.ipynb) notebook, which contains demos of generation and editing of molecules (less than 9 non-hydrogen atoms), and physics-alignment via MolEdit trained on [QM9 dataset](https://www.nature.com/articles/sdata201422).
 * [moledit.ipynb](./moledit.ipynb) notebook, which contains demos of de-novo design of drug-like molecules, and following applications via MolEdit trained on [ZINC dataset](https://zinc15.docking.org/).
-    * High quality structure rendering and diverse conformational sampling for complex molecules
-
-![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_rendering.png)  
-
-    * Structure editing and inpainting
-
-<p align="center">
-  <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_editing.png" width="50%">
-</p> 
-
-    * Re-design of aromatic systems 
-<p align="center">
-  <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/aromatic_system.png" width="50%">
-</p> 
-
-    * Functional-core based design 
-  
-<p align="center">
-  <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/functional_core.png" width="50%">
-</p> 
-
-    * Linker design 
-
-<p align="center">
-  <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/linker_design.png" width="50%">
-</p> 
-
-    * Structure building for free energy perturbation
-![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/FEP.png) 
-    * Lead-imprinted binder design for protein pockets
-![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/lead_imprinting.png) 
+    * High quality structure rendering and diverse conformational sampling for complex molecules ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_rendering.png)  
+    * Structure editing and inpainting <p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_editing.png" width="50%"></p> 
+    * Re-design of aromatic systems <p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/aromatic_system.png" width="50%"></p> 
+    * Functional-core based design <p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/functional_core.png" width="50%"></p> 
+    * Linker design <p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/linker_design.png" width="50%"></p> 
+    * Structure building for free energy perturbation![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/FEP.png) 
+    * Lead-imprinted binder design for protein pockets![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/lead_imprinting.png) 
     * ...
 
 Running these notebooks requires: 
