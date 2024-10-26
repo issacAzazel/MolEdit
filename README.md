@@ -44,6 +44,7 @@ Explore MolEdit's capabilities with:
     * Lead-imprinted binder design for protein pockets
 ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/lead_imprinting.png) 
     * ...
+
 via MolEdit trained on [ZINC dataset](https://zinc15.docking.org/).
 
 Running these notebooks requires: 
