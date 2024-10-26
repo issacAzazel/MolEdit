@@ -34,7 +34,9 @@ Explore MolEdit's capabilities with:
     * Structure editing and inpainting
 ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_editing.png) 
     * Re-design of aromatic systems 
-![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/aromatic_system.png) 
+<p align="center">
+  <img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/aromatic_system.png" width="50%">
+</p> 
     * Functional-core based design 
 ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/functional_core.png) 
     * Linker design 
