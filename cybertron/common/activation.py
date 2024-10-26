@@ -30,6 +30,7 @@ _activation_dict = {
     'leaky_relu': nn.leaky_relu,
     'gelu': nn.gelu,
     'ssp': ssp,
+    'tanh': nn.tanh
 }
 
 def get_activation(name):

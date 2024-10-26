@@ -9,6 +9,22 @@ from jax.numpy import ndarray
 from jax.nn.initializers import xavier_uniform, zeros
 from flax import linen as nn
 
+_FILTER_BY_KEY = dict()
+
+def _filter_register(*aliases):
+    """Return the alias register."""
+    def alias_reg(cls):
+        name = cls.__name__
+        name = name.lower()
+        if name not in _FILTER_BY_KEY:
+            _FILTER_BY_KEY[name] = cls
+
+        for alias in aliases:
+            if alias not in _FILTER_BY_KEY:
+                _FILTER_BY_KEY[alias] = cls
+        return cls
+    return alias_reg
+
 class Filter(nn.Module):
     r"""Base class for filter network.
 

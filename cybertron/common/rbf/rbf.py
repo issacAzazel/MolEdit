@@ -7,6 +7,20 @@ import flax.linen as nn
 
 from typing import Optional
 
+_RBF_BY_KEY = dict()
+
+def _rbf_register(*aliases):
+    """Return the alias register"""
+    def alias_reg(cls):
+        name = cls.__name__.lower()
+        if name not in _RBF_BY_KEY:
+            _RBF_BY_KEY[name] = cls
+        for alias in aliases:
+            if alias not in _RBF_BY_KEY:
+                _RBF_BY_KEY[alias] = cls
+        return cls
+    return alias_reg
+
 class RadialBasisFunctions(nn.Module):
     r"""Network for radial basis functions.
 

@@ -6,8 +6,9 @@ import numpy as np
 import flax.linen as nn
 
 from typing import Optional, Union, Tuple, List
-from .rbf import RadialBasisFunctions
+from .rbf import RadialBasisFunctions, _rbf_register
 
+@_rbf_register('gaussian')
 class GaussianBasis(RadialBasisFunctions):
     r"""Gaussian type RBF.
     ## Args:

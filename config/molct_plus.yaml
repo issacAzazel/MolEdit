@@ -1,0 +1,32 @@
+settings:
+  niu_num_block: 6 # 8 # 6
+  epsilon: 0.000001
+
+model:
+  feat_generator:
+    use_cls: False
+    atom_types: 26 # 77
+    pair_types: 5 # 415
+
+    atom_act_dim: 256
+    pair_act_dim: 128
+    fp_type: 'float32'
+
+  interaction_unit:
+    cycles: 2
+    atom_act_dim: 256
+    pair_act_dim: 128
+    atom_block:
+      num_head: 8
+      use_hyper_attention: True # False 
+      gating: True
+      sink_attention: False
+      n_transition: 4
+      act_fn: 'gelu'
+      fp_type: 'float32'
+      dropout_rate: 0.05
+    pair_block:
+      dim_outer_pdct: 32 
+      num_transition: 4
+      act_fn: 'gelu'
+      fp_type: 'float32'

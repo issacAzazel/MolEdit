@@ -1,0 +1,88 @@
+settings:
+  n_interactions: 4 # 8
+  n_node_interactions: 4 # 2 # 6
+  stop_structure_grad: False
+  share_weights: False
+  mixed_rbf: True
+  with_contractive_bias: True
+  contractive_force_constant: 0.5
+
+  short_range_rmax_min: 5.0 
+  short_range_rmax_intercept: 4.0
+  short_range_rmax_coef: 3.0
+  long_range_scale_factor: 1.5
+
+  unroll: False
+
+model:
+  num_atoms: 64
+  num_log_gaussian_rbfs: 64
+  
+  short_range_rbf: 'fourier' # 'bessel'
+
+  num_short_range_rbfs: 64
+  activation: 'silu'
+  log_gaussian_rmin: 0.4
+  bessel_trainable: True
+
+  dim_s: 256
+  dim_z: 128
+  dim_e: 128
+  lora_rank: 4
+  lora_dropout_rate: 0.05
+
+  ShapeEncoding:
+    length_scales: [1.0, 1.5, 2.0]
+    dim_emb: 64
+
+  NoiseEmbedding:
+    dim_emb: 64 # 128
+    transition_noise_scale: 0.5
+    noise_clamp_min: 0.1 
+    noise_clamp_max: 2.0 
+    noise_min: 0.01
+  
+  SchnetInteraction:
+    activation: 'ssp'
+    dim_filter: 128 # 256 # 64
+    filter_activation: 'ssp'
+    n_filter_hidden: 1
+    normalize_filter: True
+    dropout_rate: 0.05
+  
+  edge_encoder_mode: 'outerproduct' # 'allegro' # 'mlp'
+
+  MLPEdgeEncoder:
+    activation: 'ssp'
+    layer_dims: [512, 256] # [64, 64, 64, 64]
+
+  Allegro:
+    max_ell: 2
+    mlp_activation: 'silu'
+    mlp_n_hidden: 256 # 128
+    env_n_channel: 32
+    mlp_n_layers: 4
+    num_layers: 3
+    layer_norm_reps: True
+    eps: 0.001
+    share_weights: False
+    gradient_normalization: 'element' # 0.5 # 'path'
+    dropout_rate: 0.05
+    lora: True
+
+  MLPEdgeDecoder:
+    activation: 'silu'
+    layer_dims: [512,] # 128 -> 512 -> 1
+    dropout_rate: 0.05
+  
+  OuterProductPairBlock:
+    num_layers: 2
+    dim_outer_pdct: 32 
+    num_transition: 4
+    act_fn: 'gelu'
+
+  MLPMolDecoder:
+    pooling: 'mean' # 'max'
+    activation: 'silu'
+    layer_dims: [512,] # 128 -> 512 -> 1
+    dropout_rate: 0.05

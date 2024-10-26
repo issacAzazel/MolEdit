@@ -8,10 +8,11 @@ from flax import linen as nn
 from typing import Optional, Type, Union, Callable
 from jax.numpy import ndarray
 from jax.nn.initializers import xavier_uniform, zeros
-from .filter import Filter
+from .filter import Filter, _filter_register
 from ..activation import get_activation
 from ..layers.mlp import MLP
 
+@_filter_register("dense")
 class DenseFilter(Filter):
     r"""Dense filter network.
 
