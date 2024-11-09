@@ -154,7 +154,7 @@ def get_rotable_dihedrals(mol, structure, given_bonds=None, given_rotable_bonds=
                     rdMolTransforms.GetDihedralRad(conf, int(atom_i), int(atom_j), int(atom_k), int(atom_l))
     return rotable_bonds_dihedrals
 
-def uff_optimize(mol, structure):
+def uff_eval(mol, structure):
     conf = mol.GetConformer()
     for i, (x,y,z) in enumerate(structure):
          conf.SetAtomPosition(i,Point3D(float(x), float(y), float(z)))
