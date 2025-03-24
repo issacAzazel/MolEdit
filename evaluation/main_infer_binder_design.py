@@ -308,7 +308,7 @@ for i, system_name in enumerate(system_dirs):
     RDLogger.DisableLog('rdApp.*') ### disable rdkit warning
     import Xponge
     from Xponge.helper import rdkit as Xponge_rdkit_helper
-    from graph_assembler.graph_assembler import assemble_mol_graph, check_bonds, uff_optimize
+    from graph_assembler.graph_assembler import assemble_mol_graph, check_bonds, uff_eval
 
     structures = np.array(structures)
     success_or_not = []
@@ -335,14 +335,14 @@ for i, system_name in enumerate(system_dirs):
 
             mol = Xponge_rdkit_helper.assign_to_rdmol(Xponge_mol)
             try:
-                ene, force, opt_crd, _, _ = uff_optimize(mol, structure)
+                ene, force, opt_crd, _, _ = uff_eval(mol, structure)
                 uff_forces.append(force)
             except:
                 uff_forces.append(None)
         else:
             uff_forces.append(None)
     
-    print("===================== Regenerate structures =====================")
+    print("===================== Resample structures =====================")
     
     constituents_dicts = {}
     ### preprocess smiles
@@ -415,7 +415,7 @@ for i, system_name in enumerate(system_dirs):
     RDLogger.DisableLog('rdApp.*') ### disable rdkit warning
     import Xponge
     from Xponge.helper import rdkit as Xponge_rdkit_helper
-    from graph_assembler.graph_assembler import assemble_mol_graph, check_bonds, uff_optimize
+    from graph_assembler.graph_assembler import assemble_mol_graph, check_bonds, uff_eval
 
     structures = np.array(structures)
     success_or_not = []
@@ -442,9 +442,11 @@ for i, system_name in enumerate(system_dirs):
 
             mol = Xponge_rdkit_helper.assign_to_rdmol(Xponge_mol)
             try:
-                ene, force, opt_crd, _, _ = uff_optimize(mol, structure)
+                ene, force, opt_crd, _, _ = uff_eval(mol, structure)
                 uff_forces.append(force)
             except:
                 uff_forces.append(None)
         else:
             uff_forces.append(None)
+            
+    print(f"Generated binders for {system_name} saved in results/binder_design/mol2_{suffix}_regen.")
