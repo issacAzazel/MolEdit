@@ -5,3 +5,4 @@ requirements.txt
 .DS_Store
 params
 moledit_dataset
+view_structure.ipynb
