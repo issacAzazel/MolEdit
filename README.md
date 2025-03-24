@@ -4,6 +4,10 @@ This is the github repo for the paper "*In-silico* 3D Molecular Editing through 
 
 MolEdit, developed by the Gao Group at Peking University, is a molecular generative artificial intelligence (GenAI) designed to address the complex challenges of *molecular editing*. This fundamental aspect of functional molecule design involves the generation, modification, and evolution of molecules with specified structural and chemical features. Our goal is to develop molecular GenAIs as powerful as image-based GenAIs, such as image denoising diffusion probabilistic models (DDPMs).
 
+## Scaling 3D Molecular Diffusion Models for Large and Bioactive Molecules
+Using our approach, MolEdit scales 3D molecular generation from QM9 (≤9 heavy atoms, small molecules) to ZINC (≤64 heavy atoms, drug-like), and further to QMugs (≤100 heavy atoms, bioactive).
+<p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/scaling.png" width="70%"></p>
+
 ## Multimodal Generation of Molecules 
 We propose an asynchronous multimodal diffusion schedule for molecular DDPMs. This approach makes it possible to rigorously handle molecular symmetries (various point groups), and facilitates robust generation across various molecular modalities, including SMILES, graphs, and 3D structures.<p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/generation_example.png" width="70%"></p>
 
@@ -26,6 +30,7 @@ Before running notebooks, download and unzip pre-trained MolEdit checkpoints fro
 
 Explore MolEdit's capabilities with:
 * [moledit_qm9.ipynb](./moledit_qm9.ipynb) notebook, which contains demos of generation and editing of molecules (less than 9 non-hydrogen atoms), and physics-alignment via MolEdit trained on [QM9 dataset](https://www.nature.com/articles/sdata201422).
+* [moledit_QMugs.ipynb](./moledit_QMugs.ipynb) notebook, which contains demos of property-guided sampling via MolEdit trained on [QMugs dataset](https://www.nature.com/articles/s41597-022-01390-7)
 * [moledit_ZINC.ipynb](./moledit_ZINC.ipynb) notebook, which contains demos of de-novo design of drug-like molecules, and following applications via MolEdit trained on [ZINC dataset](https://zinc15.docking.org/).
     * High quality structure rendering and diverse conformational sampling for complex molecules ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_rendering.png)  
     * Structure editing and inpainting <p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_editing.png" width="50%"></p> 
@@ -48,7 +53,58 @@ Running these notebooks requires:
 
 In theory, any environment compatible with the packages mentioned above should run successfully. Our configuration includes Ubuntu 22.04 (GNU/Linux x86_64), NVIDIA A100-SXM4-80GB, CUDA 11.8 and Anaconda 23.7.2. The complete notebook execution takes approximately 0.5 hours.
 
-Details on calculating quantitative metrics, including validity, uniqueness, molecular physical stability, and conformational diversity, can be found in [evaluation](./evaluation).
+Details on calculating quantitative metrics, including validity, uniqueness, molecular physical stability, and conformational diversity, can be found in [evaluation](./evaluation). In [evaluation](./evalution), we also provide scripts we used in quantitative benchmark study.
+
+## Training a MolEdit Model
+
+We provide an example [training script](./main_train.py) for implementing MolEdit. To train your model:
+
+### Data Preparation
+1. Save each data point as individual `.pkl` files
+2. Create a `name_list.pkl` file containing a dictionary with the following structure:
+```python
+{
+    (0, 8): {
+        "size": ...,          # [description of this field]
+        "name_list": [pkl_file_1, pkl_file_2, ...]
+    }, 
+    (8, 16): {
+        "size": ...,          # [description of this field]
+        "name_list": [pkl_file_1, pkl_file_2, ...]
+    },
+    ...
+}
+```
+- **Dictionary keys**: Tuple ranges indicate atom count intervals (e.g., (0,8) for molecules with 0-8 atoms)
+- **Value structure**:
+  - `size`: [brief explanation of what this represents]
+  - `name_list`: List of paths to your `.pkl` files
+
+### Data File Format
+Each `.pkl` file should contain:
+```python
+{
+    'feature': {
+        mask_type: {
+            'n_atoms': ...,       # Number of atoms
+            'atom_feat': ...,     # Atom features [describe format if needed]
+            'bond_feat': ...      # Bond features [describe format if needed]
+        },
+        ...
+    },
+    'structure': {
+        mask_type: {
+            'rg': ...,             # Radius of gyration
+            'atom_crd': ...,       # Ground truth 3D coordinates
+            'perm_transrot_crd': ...,  # Group-optimized noisy structure
+            'perm_transrot_label': ... # Group-optimized labels
+        },
+        ...
+    }
+}
+```
+### Alternative Approach
+You may alternatively implement your own data pipeline if this format doesn't suit your needs.
 
 ## Data Availability
 
