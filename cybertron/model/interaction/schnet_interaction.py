@@ -171,6 +171,7 @@ class LoRAModulatedSchnetInteraction(nn.Module):
     lora_rank: int = 4
     lora_alpha: Union[int, None] = None
     lora_dropout_rate: float = 0.0
+    residual: bool = True
 
     @nn.compact
     def __call__(self, x, f_ij, c_ij, mask, modulated_params):
@@ -241,6 +242,9 @@ class LoRAModulatedSchnetInteraction(nn.Module):
         # (A, W) -> (A, F)
         y = atomwise_ac(y, modulated_params)
         # (A, F) + (A, F) -> (A, F)
-        x_new = x + y
+        if self.residual:
+            x_new = x + y
+        else:
+            x_new = y
 
         return x_new

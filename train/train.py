@@ -5,6 +5,8 @@ import flax.linen as nn
 from typing import Union, Callable
 
 from cybertron.common.config_load import Config
+from cybertron.model.molct_plus import MolCT_Plus
+from cybertron.readout import GFNReadout, GFNScalarReadout
 
 from config.global_setup import EnvironConfig
 global_setup = EnvironConfig() ### Set Hyper-parameters here
@@ -14,12 +16,16 @@ BF16_FLAG = global_setup.bf16_flag
 class MolEditScoreNet(nn.Module):
     encoder: Union[nn.Module, Callable]
     gfn: Union[nn.Module, Callable]
+    with_cond: bool = False
     
     @nn.compact
-    def __call__(self, atom_raw_feat, pair_raw_feat, xi, atom_mask, noise, rg):
-        _, atom_feat, bond_feat = self.encoder(atom_raw_feat, pair_raw_feat, atom_mask)
-
-        displacements = self.gfn(atom_feat, bond_feat, xi, atom_mask, noise, rg)
+    def __call__(self, atom_raw_feat, pair_raw_feat, xi, atom_mask, noise, rg, cond=None):
+        if self.with_cond:
+            _, atom_feat, bond_feat = self.encoder(atom_raw_feat, pair_raw_feat, atom_mask, cond)
+            displacements = self.gfn(atom_feat, bond_feat, xi, atom_mask, noise, rg, cond)
+        else:
+            _, atom_feat, bond_feat = self.encoder(atom_raw_feat, pair_raw_feat, atom_mask)
+            displacements = self.gfn(atom_feat, bond_feat, xi, atom_mask, noise, rg)
 
         return displacements
     
@@ -33,7 +39,7 @@ class MolEditWithVELossCell(nn.Module):
         self.iter_weights = self.iter_weights / jnp.sum(self.iter_weights)
         self.atom_number_power = self.train_cfg.atom_number_power
 
-    def __call__(self, atom_feat, bond_feat, xi, atom_mask, noise, label, rg):
+    def __call__(self, atom_feat, bond_feat, xi, atom_mask, noise, label, rg, cond=None):
         
         ##### convert to _dtype
         _dtype = jnp.bfloat16 if BF16_FLAG else jnp.float32
@@ -41,7 +47,7 @@ class MolEditWithVELossCell(nn.Module):
             jax.tree_map(lambda x:x.astype(_dtype), 
                         (atom_feat, bond_feat))
         displacements = self.score_net(atom_feat, bond_feat, xi, 
-                                            atom_mask, noise, rg)
+                                            atom_mask, noise, rg, cond)
         displacements = jnp.array(displacements)
         
         ##### convert to fp32

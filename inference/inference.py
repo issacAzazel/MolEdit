@@ -244,6 +244,7 @@ def DPM_3_inference(data_dict, rng_key, score_fn,
 
     input_keys = ["atom_feat", "bond_feat", "coordinates", 
                     "atom_mask", "noise_scale", "rg"]
+    if "property" in data_dict: input_keys += ['property']
     input_dict = {
         "atom_feat": data_dict["atom_feat"], 
         "bond_feat": data_dict["bond_feat"], 
@@ -251,6 +252,7 @@ def DPM_3_inference(data_dict, rng_key, score_fn,
         "atom_mask": data_dict["atom_mask"],
         "rg": data_dict["rg"]
     }
+    if "property" in data_dict: input_dict.update({"property": data_dict["property"]})
 
     rng_keys = jax.random.split(rng_key, input_dict['atom_mask'].shape[0]+1)
     batch_rng_key, rng_key = rng_keys[:-1], rng_keys[-1]

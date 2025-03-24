@@ -3,3 +3,5 @@ __pycache__/
 results
 requirements.txt
 .DS_Store
+params
+moledit_dataset

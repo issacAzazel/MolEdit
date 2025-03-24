@@ -1,7 +1,7 @@
 import numpy as np
 import jax 
 import jax.numpy as jnp
-from data.constants import feature_all_type
+from data.constants import feature_all_type, structure_properties, property_info
 import itertools
 
 def one_hot(depth, indices):
@@ -51,6 +51,58 @@ def preprocess_data(input_dict, pad_to_len):
         'bond_feat': pad_axis(bond_feat, pad_to_len, axis=[0,1], constant_values=0),
         'rg': np.array(rg, dtype=np.float32) 
     }
+    
+def preprocess_data_with_property(input_dict, pad_to_len, properties=[]):
+    n_atoms = len(input_dict['atomic_numbers'])
+    atom_mask = np.ones(n_atoms, dtype=np.bool_)
+
+    atom_feat = np.concatenate(
+        [
+            one_hot(len(feature_all_type['atomic_numbers']), 
+                    np.array([feature_all_type['atomic_numbers'].index(i) for i in input_dict['atomic_numbers']])),
+            one_hot(len(feature_all_type['hybridizations']), 
+                    np.array([feature_all_type['hybridizations'].index(i) for i in input_dict['hybridizations']])),
+            one_hot(len(feature_all_type['hydrogen_numbers']), 
+                    np.array([feature_all_type['hydrogen_numbers'].index(i) for i in input_dict['hydrogen_numbers']]))
+        ], axis=-1
+    ).astype(np.bool_)
+
+    if 'bonds' not in input_dict.keys():
+        bond_feat = np.zeros((n_atoms, n_atoms, 5), dtype=np.bool_)
+    else:
+        bond_feat = np.ones((n_atoms, n_atoms), dtype=np.int32) * (-1)
+        bond_info = input_dict['bonds']
+        for atom_a, bond_a in bond_info.items():
+            for atom_b, bond_type in bond_a.items():
+                bond_feat[atom_a][atom_b] = bond_feat[atom_b][atom_a] \
+                    = feature_all_type['bond_types'].index(bond_type)
+        bond_feat = np.logical_and(one_hot(5, bond_feat).astype(np.bool_), 
+                                   (bond_feat != -1)[...,None])
+
+    rg = np.random.choice(input_dict['radius_of_gyrations'])
+    
+    property_vec = []
+    for p in structure_properties:
+        if p in properties:
+            p_val = input_dict[p]
+            p_val = (p_val - property_info[p]['mean']) / property_info[p]['std']
+            rbf_centers = property_info[p]['rbf_centers']
+            rbf_sigma = property_info[p]['rbf_sigma']
+            property_vec.extend(1.0 / np.sqrt(2 * np.pi * rbf_sigma) * np.exp(-0.5 * ((p_val - rbf_centers) / rbf_sigma) ** 2))
+        else:
+            property_vec.extend([0, ] * len(property_info[p]['rbf_centers']))
+    property_vec = np.array(property_vec, dtype=np.float32)
+        
+    ret_dict = {
+        'atom_mask': pad_axis(atom_mask, pad_to_len, axis=[0], constant_values=0),
+        'atom_feat': pad_axis(atom_feat, pad_to_len, axis=[0], constant_values=0),
+        'bond_feat': pad_axis(bond_feat, pad_to_len, axis=[0,1], constant_values=0),
+        'rg': np.array(rg, dtype=np.float32) 
+    }
+    if len(properties):
+        ret_dict['property'] = property_vec
+
+    return ret_dict
     
 def Kabsch_align(x, y, atom_mask, is_np=True):
     _np = np if is_np else jnp

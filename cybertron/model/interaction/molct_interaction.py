@@ -10,7 +10,7 @@ import numpy as np
 
 from flax import linen as nn
 from typing import Optional, Union, Tuple, Callable
-from ...common.base import PositionalEmbedding, MultiheadAttention, HyperformerPairBlock, HyperformerAtomBlock, str_to_jax_dtype
+from ...common.base import PositionalEmbedding, MultiheadAttention, HyperformerPairBlock, HyperformerAtomBlock, AdaLNHyperformerAtomBlock, str_to_jax_dtype
 from ...common.activation import get_activation
 from ...common.config_load import Config
 
@@ -184,5 +184,52 @@ class TopoInteractionUnit(nn.Module):
         ### 2. Update MSA Rep.:
         for _ in range(self.cycles):
             atom_act = self.niu_atom_block(atom_act, pair_act, atom_mask, pair_mask)
+            
+        return atom_act, pair_act
+
+
+class AdaLNTopoInteractionUnit(nn.Module):
+
+    config: Config
+
+    def setup(self):
+        
+        ## extract args
+        self.atom_act_dim = self.config.atom_act_dim
+        self.pair_act_dim = self.config.pair_act_dim
+        self.cycles = self.config.cycles
+
+        atom_config = self.config.atom_block
+        pair_config = self.config.pair_block
+
+        atom_fp_type = str_to_jax_dtype(atom_config.fp_type)
+        self.niu_atom_block = AdaLNHyperformerAtomBlock(atom_act_dim=self.atom_act_dim,
+                                                        pair_act_dim=self.pair_act_dim,
+                                                        num_head=atom_config.num_head,
+                                                        use_hyper_attention=atom_config.use_hyper_attention,
+                                                        gating=atom_config.gating,
+                                                        sink_attention=atom_config.sink_attention,
+                                                        key_dim=atom_config.key_dim if "key_dim" in atom_config.__dict__.keys() else None,
+                                                        value_dim=atom_config.value_dim if "value_dim" in atom_config.__dict__.keys() else None,
+                                                        n_transition=atom_config.n_transition,
+                                                        act_fn=atom_config.act_fn,
+                                                        fp_type=atom_fp_type,
+                                                        dropout_rate=atom_config.dropout_rate)
+        
+        pair_fp_type = str_to_jax_dtype(pair_config.fp_type)
+        self.niu_pair_block = HyperformerPairBlock(dim_feature=self.pair_act_dim,
+                                                   dim_outerproduct=pair_config.dim_outer_pdct,
+                                                   num_transition=pair_config.num_transition,
+                                                   act_fn=pair_config.act_fn,
+                                                   fp_type=pair_fp_type,)
+
+    def __call__(self, atom_act, pair_act, atom_mask, pair_mask, cond):
+        
+        ### 1. Update Pair Rep.:
+        pair_act = self.niu_pair_block(atom_act, pair_act, atom_mask, pair_mask)
+
+        ### 2. Update MSA Rep.:
+        for _ in range(self.cycles):
+            atom_act = self.niu_atom_block(atom_act, pair_act, atom_mask, pair_mask, cond)
             
         return atom_act, pair_act

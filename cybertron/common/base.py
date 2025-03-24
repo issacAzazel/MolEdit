@@ -11,6 +11,7 @@ from .activation import get_activation
 from .layers.dense import LoRAModulatedDense
 from cybertron.modules.basic import Softmax1
 from cybertron.modules.basic import ActFuncWrapper
+from .adaptive_layernorm import adaLN
 
 from config.global_setup import EnvironConfig
 global_setup = EnvironConfig() ### Set Hyper-parameters here
@@ -253,6 +254,7 @@ class HyperAttention(nn.Module):
     key_dim: Optional[int] = None
     value_dim: Optional[int] = None
     fp_type: jnp.dtype = jnp.float32
+    pre_norm: bool = True
 
     def setup(self):
 
@@ -281,7 +283,7 @@ class HyperAttention(nn.Module):
             self.mat_norm = ActFuncWrapper(nn.LayerNorm(epsilon=NORM_SMALL, dtype=self._dtype, param_dtype=jnp.float32))
         del std
 
-    def __call__(self, atom_act, pair_act, atom_mask, pair_mask):
+    def __call__(self, atom_act, pair_act, atom_mask, pair_mask,):
 
         # (A, A', Cz)
         _a1, _a2, _c = pair_act.shape
@@ -294,7 +296,8 @@ class HyperAttention(nn.Module):
 
         # (A, Cm)
         atom_act = atom_act.astype(self._dtype)
-        atom_act = self.query_norm(atom_act)
+        if self.pre_norm:
+            atom_act = self.query_norm(atom_act)
         # atom_act = self.fp_type(atom_act)
 
         # (A, A', Cz)
@@ -463,6 +466,61 @@ class HyperformerAtomBlock(nn.Module):
         ## update atom_act
         atom_act += self.hyper_attention(atom_act, pair_act, atom_mask, pair_mask)
         atom_act += self.transition(atom_act)
+        return atom_act
+    
+class AdaLNHyperformerAtomBlock(nn.Module):
+
+    atom_act_dim: int
+    pair_act_dim: int
+    ## args in hyperattention
+    num_head: int
+    use_hyper_attention: bool
+    gating: bool = False
+    sink_attention: bool = False
+    key_dim: Optional[int] = None
+    value_dim: Optional[int] = None
+    fp_type: jnp.dtype = jnp.float32
+    ## args in transition
+    n_transition: int = 2
+    act_fn: str = "relu"
+    dropout_rate: float = 0.
+
+    def setup(self):
+        
+        self._dtype = jnp.bfloat16 if BF16_FLAG else jnp.float32
+
+        self.hyper_attention = HyperAttention(atom_act_dim=self.atom_act_dim,
+                                              pair_act_dim=self.pair_act_dim,
+                                              num_head=self.num_head,
+                                              use_hyper_attention=self.use_hyper_attention,
+                                              gating=self.gating,
+                                              sink_attention=self.sink_attention,
+                                              key_dim=self.key_dim,
+                                              value_dim=self.value_dim,
+                                              fp_type=self.fp_type,
+                                              pre_norm=False)
+        self.adaLN_hyper_attention = adaLN(self.hyper_attention)
+        TransitionUnit = nn.checkpoint(Transition) if REMAT_FLAG else Transition
+        self.transition = TransitionUnit(dim_feature=self.atom_act_dim,
+                                         n_transition=self.n_transition,
+                                         act_fn=self.act_fn,
+                                         pre_norm=False)
+        self.adaLN_transition = adaLN(self.transition)
+        
+        self.dropout = nn.Dropout(rate=self.dropout_rate, 
+                                  deterministic=not DROPOUT_FLAG)
+
+    def __call__(self, atom_act, pair_act, atom_mask, pair_mask, cond):
+
+        # atom_act = self.fp_type(atom_act)
+        # pair_act = self.fp_type(pair_act)
+        
+        #### attention dropout
+        pair_mask = self.dropout(jnp.array(pair_mask, self._dtype))
+
+        ## update atom_act
+        atom_act = self.adaLN_hyper_attention(atom_act, cond, other_inputs=(pair_act, atom_mask, pair_mask))
+        atom_act = self.adaLN_transition(atom_act, cond, other_inputs=())
         return atom_act
     
 
@@ -659,6 +717,7 @@ class Transition(nn.Module):
     n_transition: int
     fp_type: jnp.dtype = jnp.float32
     act_fn: str = "relu"
+    pre_norm: bool = True
     
     @nn.compact
     def __call__(self,
@@ -669,7 +728,7 @@ class Transition(nn.Module):
         
         # Initializing params
         dim_transition = int(self.dim_feature * self.n_transition)
-        norm_fn = ActFuncWrapper(nn.LayerNorm(epsilon=NORM_SMALL, dtype=_dtype, param_dtype=jnp.float32))
+        norm_fn = ActFuncWrapper(nn.LayerNorm(epsilon=NORM_SMALL, dtype=_dtype, param_dtype=jnp.float32)) if self.pre_norm else lambda x: x
         transition_1 = nn.Dense(features=dim_transition,
                                 use_bias=True,
                                 name="transition_1",

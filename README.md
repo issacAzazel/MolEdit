@@ -18,7 +18,7 @@ To suppress hallucinations of physically unstable and chemically invalid structu
 ## Versatile and Controllable Design and Editing of Functional Molecules
 Inspired by the success of image GenAIs, a foundational molecular GenAI should be able to respond to various specifications of molecular editing. Therefore, we equip MolEdit with flexible controls in context of multiple conditions. For instance, MolEdit is able to control the shape of molecules using the radius of gyration. The model can also be conditioned on (sub)molecular graphs and "inpaint" the missing motifs given predefined chemical contexts like fragments, groups, etc., and/or given geometric restraints like substructures, orientations, etc. This controllable generation strategy also facilitates MolEdit to render diverse high-quality structures from textual molecular representations like SMILES and graphs.
 
-Detailed examples can be found in notebook [moledit.ipynb](./moledit.ipynb)!
+Detailed examples can be found in notebook [moledit_ZINC.ipynb](./moledit_ZINC.ipynb)!
 
 ## Exploring MolEdit's capabilities!
 
@@ -26,7 +26,7 @@ Before running notebooks, download and unzip pre-trained MolEdit checkpoints fro
 
 Explore MolEdit's capabilities with:
 * [moledit_qm9.ipynb](./moledit_qm9.ipynb) notebook, which contains demos of generation and editing of molecules (less than 9 non-hydrogen atoms), and physics-alignment via MolEdit trained on [QM9 dataset](https://www.nature.com/articles/sdata201422).
-* [moledit.ipynb](./moledit.ipynb) notebook, which contains demos of de-novo design of drug-like molecules, and following applications via MolEdit trained on [ZINC dataset](https://zinc15.docking.org/).
+* [moledit_ZINC.ipynb](./moledit_ZINC.ipynb) notebook, which contains demos of de-novo design of drug-like molecules, and following applications via MolEdit trained on [ZINC dataset](https://zinc15.docking.org/).
     * High quality structure rendering and diverse conformational sampling for complex molecules ![image](https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_rendering.png)  
     * Structure editing and inpainting <p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/structure_editing.png" width="50%"></p> 
     * Re-design of aromatic systems <p align="center"><img src="https://github.com/issacAzazel/MolEdit/blob/main/figs/aromatic_system.png" width="50%"></p> 
