@@ -53,7 +53,7 @@ Running these notebooks requires:
 
 In theory, any environment compatible with the packages mentioned above should run successfully. Our configuration includes Ubuntu 22.04 (GNU/Linux x86_64), NVIDIA A100-SXM4-80GB, CUDA 11.8 and Anaconda 23.7.2. The complete notebook execution takes approximately 0.5 hours.
 
-Details on calculating quantitative metrics, including validity, uniqueness, molecular physical stability, and conformational diversity, can be found in [evaluation](./evaluation). In [evaluation](./evalution), we also provide scripts we used in quantitative benchmark study.
+Details on calculating quantitative metrics, including validity, uniqueness, molecular physical stability, and conformational diversity, can be found in [evaluation](./evaluation). We also provide scripts used in quantitative benchmark study.
 
 ## Training a MolEdit Model
 
