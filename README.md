@@ -26,7 +26,7 @@ Detailed examples can be found in notebook [moledit_ZINC.ipynb](./moledit_ZINC.i
 
 ## Exploring MolEdit's capabilities!
 
-Before running notebooks, download and unzip pre-trained MolEdit checkpoints from [here](https://zenodo.org/records/13995116), and move folder `moledit_dataset` and folder `params` into your working directory.
+Before running notebooks, download and unzip pre-trained MolEdit checkpoints (`checkpoints.zip`) from [here](https://zenodo.org/records/15080465), and move folder `moledit_dataset` and folder `params` into your working directory.
 
 Explore MolEdit's capabilities with:
 * [moledit_qm9.ipynb](./moledit_qm9.ipynb) notebook, which contains demos of generation and editing of molecules (less than 9 non-hydrogen atoms), and physics-alignment via MolEdit trained on [QM9 dataset](https://www.nature.com/articles/sdata201422).
@@ -108,7 +108,7 @@ You may alternatively implement your own data pipeline if this format doesn't su
 
 ## Data Availability
 
-The dataset used in the development of MolEdit can be found in [here](https://zenodo.org/records/13995116).
+The dataset used in the development of MolEdit can be found in [here](https://zenodo.org/records/15080465).
 
 ## Citation
 ```python
