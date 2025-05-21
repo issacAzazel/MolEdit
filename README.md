@@ -26,7 +26,7 @@ Detailed examples can be found in notebook [moledit_ZINC.ipynb](./moledit_ZINC.i
 
 ## Exploring MolEdit's capabilities!
 
-Before running notebooks, download and unzip pre-trained MolEdit checkpoints (`checkpoints.zip`) from [here](https://zenodo.org/records/15080465), and move folder `moledit_dataset` and folder `params` into your working directory.
+Before running notebooks, download and unzip pre-trained MolEdit checkpoints (`checkpoints.zip`) from [here](https://zenodo.org/records/15480816), and move folder `moledit_dataset` and folder `params` into your working directory.
 
 Explore MolEdit's capabilities with:
 * [moledit_qm9.ipynb](./moledit_qm9.ipynb) notebook, which contains demos of generation and editing of molecules (less than 9 non-hydrogen atoms), and physics-alignment via MolEdit trained on [QM9 dataset](https://www.nature.com/articles/sdata201422).
@@ -53,7 +53,7 @@ Running these notebooks requires:
 
 In theory, any environment compatible with the packages mentioned above should run successfully. Our configuration includes Ubuntu 22.04 (GNU/Linux x86_64), NVIDIA A100-SXM4-80GB, CUDA 11.8 and Anaconda 23.7.2. The complete notebook execution takes approximately 0.5 hours.
 
-Details on calculating quantitative metrics, including validity, uniqueness, molecular physical stability, and conformational diversity, can be found in [evaluation](./evaluation). We also provide scripts used in quantitative benchmark study.
+Details on calculating quantitative metrics, including validity, uniqueness, molecular physical stability, and conformational diversity, can be found in [evaluation](./evaluation). Additionally, we provide useful scripts to evaluate energy/force under [the General AMBER force field](https://ambermd.org/antechamber/gaff.html) (without periodic boundary conditions). We also provide scripts used in quantitative benchmark study (linker design & binder design).
 
 ## Training a MolEdit Model
 
@@ -108,7 +108,7 @@ You may alternatively implement your own data pipeline if this format doesn't su
 
 ## Data Availability
 
-The dataset used in the development of MolEdit can be found in [here](https://zenodo.org/records/15080465).
+The dataset used in the development of MolEdit can be found in [here](https://zenodo.org/records/15480816).
 
 ## Citation
 ```python
